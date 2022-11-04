@@ -1,18 +1,19 @@
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
+import { Signer } from "ethers";
 import { ethers } from "hardhat";
 
 async function main() {
-  const currentTimestampInSeconds = Math.round(Date.now() / 1000);
-  const ONE_YEAR_IN_SECS = 365 * 24 * 60 * 60;
-  const unlockTime = currentTimestampInSeconds + ONE_YEAR_IN_SECS;
-
-  const lockedAmount = ethers.utils.parseEther("1");
-
-  const Lock = await ethers.getContractFactory("Lock");
-  const lock = await Lock.deploy(unlockTime, { value: lockedAmount });
-
-  await lock.deployed();
-
-  console.log(`Lock with 1 ETH and unlock timestamp ${unlockTime} deployed to ${lock.address}`);
+  const signers = await ethers.getSigners();
+  const addr = await signers[0].getAddress();
+  const balance = await signers[0].getBalance();
+  console.log(`${addr} has ${balance}`);
+  const NFTService = await ethers.getContractFactory('NFTService');
+  
+  const nftService = await NFTService.deploy();
+  const trx =  await nftService.deployed();
+  console.log(trx.estimateGas)
+  console.log("nftService deployed at", nftService.address);
+  // console.log(`Lock with 1 ETH and unlock timestamp ${unlockTime} deployed to ${lock.address}`);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
