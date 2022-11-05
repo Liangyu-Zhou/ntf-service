@@ -1,5 +1,11 @@
 {
   "name": "hardhat-project",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
   "devDependencies": {
     "@ethersproject/abi": "^5.7.0",
     "@ethersproject/providers": "^5.7.2",
@@ -33,8 +39,11 @@
     "formidable": "^2.0.1",
     "formik": "^2.2.9",
     "next": "^13.0.2",
+    "nft.storage": "^7.0.0",
     "react": "^18.2.0",
     "react-blockies": "^1.4.1",
+    "react-dom": "^18.2.0",
+    "react-toastify": "^9.1.1",
     "solc": "^0.8.17",
     "solid": "^0.2.1",
     "yup": "^0.32.11"
