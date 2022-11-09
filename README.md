@@ -1,13 +1,9 @@
-# Sample Hardhat Project
+# NFT service project
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a script that deploys that contract.
+This project provides NFT services of ERC721, ERC1155 and ERC3525 token. For ERC1155 and ERC3525, it provides a DEX service base on AMM as well as CLMM.
 
-Try running some of the following tasks:
+To run the project:
 
 ```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat run scripts/deploy.ts
+yarn build && yarn start
 ```
