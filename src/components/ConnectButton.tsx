@@ -1,13 +1,9 @@
 import React from "react";
 import AddressAvatar from "./AddressAvatar"
 import Button from "./Button";
-
+import useSigner from "../state/signer";
 const ConnectButton = () => {
-    const address = "";
-    const loading = false;
-    const connectWallet = () => {
-        // TODO:
-    };
+    const { address, loading, connectWallet } = useSigner();
 
     if (address) return <AddressAvatar address={address}></AddressAvatar>;
     return (<button 

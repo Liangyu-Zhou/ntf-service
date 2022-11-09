@@ -14,21 +14,20 @@ const NavBarItem = (props: NavbarItemProps) => {
     const activeRoute = router.route.split("/")[1];
     const isActive = href == `/${activeRoute}`;
     return (
-        <Link href={href}>
-            <a className={classNames("rounded-lg px-4 py-2 font-semibold", {
+        (<Link
+            href={href}
+            className={classNames("rounded-lg px-4 py-2 font-semibold", {
                 "bg-black text-white": isActive,
             })}>
-                {children}
-            </a>
-        </Link>
-    )
-
+            {children}
+        </Link>)
+    );
 }
 
 
 const NavBar = () => {
     return (
-        <nav className = "absolute bottom-1/2 right -1/2 flex translate-y-1/2 transform justify-center">
+        <nav className = "absolute bottom-1/2 right-1/2 flex translate-y-1/2 translate-x-1/2 transform justify-center">
             <NavBarItem href="/">Home</NavBarItem>
             <NavBarItem href="/owned">Owned</NavBarItem>
             <NavBarItem href="/create">Create</NavBarItem>

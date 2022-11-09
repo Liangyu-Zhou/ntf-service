@@ -1,54 +1,26 @@
-
-import { useField } from "formik";
-import { UploadIcon } from "@heroicons/react/solid";
-import { CSSProperties, useEffect, useRef, useState } from "react";
 import classNames from "classnames";
-import React from "react";
+import { useField } from "formik";
+import { TextareaHTMLAttributes } from "react";
 
-type ImagePickerProps = {
+type TextAreaProps = {
     name: string;
-    className?: string;
-}
+} & TextareaHTMLAttributes<HTMLTextAreaElement>;
 
-const ImagePicker = ({ name, className }: ImagePickerProps) => {
-    const [, { error, value }, { setValue }] = useField<File>(name);
-    const ref = useRef<HTMLInputElement | null>(null);
-    const [url, setURL] = useState<string>();
-
-    useEffect(() => {
-        if (value) {
-            const newURL = URL.createObjectURL(value);
-            setURL(newURL);
-            return () => URL.revokeObjectURL(newURL);
-        } else setURL(undefined);
-    }, [value]);
-
-    const style: CSSProperties = {
-        backgroundImage: url && `url(${url})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-    };
+const TextArea = (props: TextAreaProps) => {
+    const [, { error, value }, { setValue }] = useField(props.name);
 
     return (
-        <button
-            className={classNames(
-                className,
-                "group flex h-96 w-72 items-center justify-center rounded-xl border",
-                { "border-black": !error, "border-red-500": error }
-            )}
-            style={style}
-            onClick={() => {
-                if (ref.current) ref.current.click();
-            }}
-            type="button"
-        >
-        {!url && (
-                <div className="flex items-center text-lg font-semibold">
-                    <UploadIcon className="mr-2 h-9 w-9"/>
-            </div>
-        )}
-        </button>
+        <textarea
+            className={classNames("flex-grow resize-none rounded border px-2 py-1", {
+                "border-gray-300": !error,
+                "border-red-500": error,
+            })}
+            placeholder="description"
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            {...props}
+        />
     );
 };
 
-export default ImagePicker;
+export default TextArea;

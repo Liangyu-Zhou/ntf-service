@@ -35,7 +35,10 @@ const handler: NextApiHandler = async (req, res) => {
             description: data.description,
             image: blob,
         });
+
+        // return res.status(400);
         unlinkSync(filepath);
+        
         res.status(201).json({ uri: metadata.url });
     } catch (e) {
         console.log(e);

@@ -6,6 +6,10 @@ import { ipfsToHTTPS } from "../helpers";
 import { NFT } from "../state/nft-market/interfaces";
 import AddressAvatar from "./AddressAvatar";
 import SellPopup from "./SellPopup";
+import { useRouter } from "next/router";
+import { toast } from "react-toastify";
+import useNFTMarket from "../state/nft-market";
+import useSigner from "../state/signer";
 
 type NFTMetadata = {
     name: string;
@@ -20,12 +24,15 @@ type NFTCardProps = {
 
 const NFTCard = (props: NFTCardProps) => {
     const { nft, className } = props;
-    const address = "";
+    const { address } = useSigner();
     const [meta, setMeta] = useState<NFTMetadata>();
+    const { listNFT, cancelListing, buyNFT } = useNFTMarket();
+    const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [SellPopupOpen, setSellPopupOpen] = useState(false);
     const forSale = nft.price != "0";
     const owned = nft.owner == address?.toLowerCase();
+    const showErrorToast = () => toast.warn("Something wrong!");
 
     useEffect(() => {
         const fetchMetadata = async () => {
@@ -37,28 +44,66 @@ const NFTCard = (props: NFTCardProps) => {
                 description: json.description,
                 imageURL: ipfsToHTTPS(json.image),
             });
-        }
+        };
+        void fetchMetadata();
     }, [nft.tokenURI]);
-
-    const onBuyCliked = async () => {
-
-    };
-    const onCancelClicked = async () => {
-
-    };
-    const onSellConfirmed = async () => {
-
-    };
 
     const onButtonClick = async () => {
         if (owned) {
             if (forSale) onCancelClicked();
             else setSellPopupOpen(true);
         } else {
-            if (forSale) onBuyCliked();
-            else throw new Error("onButtonClick called when NFT is not owned or is not for sell, should never happen");
-
+            if (forSale) onBuyClicked();
+            else {
+                throw new Error(
+                    "onButtonClick called when NFT is not owned and is not listed, should never happen"
+                );
+            }
         }
+    };
+
+    const onBuyClicked = async () => {
+        setLoading(true);
+        try {
+            await buyNFT(nft);
+            router.push("/owned");
+            toast.success(
+                "You collection will be updated shortly! Refresh the page."
+            );
+        } catch (e) {
+            showErrorToast();
+            console.log(e);
+        }
+        setLoading(false);
+    };
+
+    const onCancelClicked = async () => {
+        setLoading(true);
+        try {
+            await cancelListing(nft.id);
+            toast.success(
+                "You canceled this listing. Changes will be reflected shortly."
+            );
+        } catch (e) {
+            showErrorToast();
+            console.log(e);
+        }
+        setLoading(false);
+    };
+
+    const onSellConfirmed = async (price: BigNumber) => {
+        setSellPopupOpen(false);
+        setLoading(true);
+        try {
+            await listNFT(nft.id, price);
+            toast.success(
+                "You listed this NFT for sale. Changes will be reflected shortly."
+            );
+        } catch (e) {
+            showErrorToast();
+            console.log(e);
+        }
+        setLoading(false);
     };
 
     return (
@@ -105,9 +150,9 @@ const NFTCard = (props: NFTCardProps) => {
                     </>
                 )}
             </button>
-            <SellPopup 
+            <SellPopup
                 open={SellPopupOpen}
-                onClose={()=> setSellPopupOpen(false)}
+                onClose={() => setSellPopupOpen(false)}
                 onSubmit={onSellConfirmed}
             />
         </div>
