@@ -13,6 +13,7 @@ describe("ERC1155 test", function() {
         testNFT = await TestNFT.connect(addr1).deploy();
         
     });
+    
     describe("test updateFeeAndRecipient", ()=>{
         it("should revert if recipient number is not equal to fee length", async() => {
             const recipients:string[] = [addr1.address];
@@ -21,10 +22,10 @@ describe("ERC1155 test", function() {
             await expect(trx).to.be.revertedWith("updateFee: not match");
         });
     });
-    
+
     it("create list and buy", async () => {
         await testNFT.connect(addr1).setApprovalForAll(marketplace.address, true);
         await marketplace.connect(addr1).createList(testNFT.address, 1, 5, 4000, ethers.utils.parseEther("0.1"));
         await marketplace.connect(addr2).buyListToken(0, {value: ethers.utils.parseEther("0.1")});        
-    })
+    });
 });

@@ -3,7 +3,7 @@ pragma solidity ^0.8.9;
 import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
-contract Marketplace {
+contract ERC1155Marketplace {
     using SafeMath for uint256;
     uint256 private marketplaceFee = 5;
     address private admin;
