@@ -31,6 +31,7 @@ export const SignerProvider = ({ children }: { children: ReactNode }) => {
     }, []);
 
     const connectWallet = async () => {
+        console.log("click connect");
         setLoading(true);
         try {
             const web3modal = new Web3Modal({ cacheProvider: true });
